@@ -35,10 +35,14 @@ if [ "${1:-}" = "auth" ]; then
   TTY_FLAG="-t"
 fi
 
+# Disable MSYS/MinGW automatic path conversion for docker.exe
+# Without this, MSYS converts /c/... paths back to C:\... breaking Docker
+export MSYS_NO_PATHCONV=1
+
 exec docker run --rm -i $TTY_FLAG \
   -v "$PROJECT_ROOT:$PROJECT_ROOT" \
   -v "/tmp:/tmp" \
   -v "$PROJECT_ROOT/.gh:/root/.config/gh" \
-  -w "${PWD}" \
+  -w "$PWD" \
   "$IMAGE_NAME" \
   "$@"

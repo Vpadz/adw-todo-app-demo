@@ -71,11 +71,14 @@ GEM
       zeitwerk (>= 1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2026.1)
+      tzinfo (>= 1.0.0)
     zeitwerk (2.7.5)
 
 PLATFORMS
   arm64-darwin-23
   ruby
+  x64-mingw-ucrt
 
 DEPENDENCIES
   aws-sdk-s3
@@ -88,6 +91,7 @@ DEPENDENCIES
   rexml
   rufus-scheduler
   service_actor
+  tzinfo-data
 
 BUNDLED WITH
    2.6.9

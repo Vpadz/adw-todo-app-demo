@@ -9,7 +9,7 @@ module Adw
       def github_env
         project_bin = File.join(Adw.project_root, "bin")
         {
-          "PATH" => "#{project_bin}:#{ENV.fetch('PATH', '')}"
+          "PATH" => "#{project_bin}#{File::PATH_SEPARATOR}#{ENV.fetch('PATH', '')}"
         }
       end
 

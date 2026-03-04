@@ -8,8 +8,14 @@ module Adw
   module Agent
     class << self
       def claude_path
-        @claude_path ||= `which claude`.strip.tap do |path|
+        @claude_path ||= begin
+          path = if Gem.win_platform?
+                   `where claude`.lines.first&.strip.to_s
+                 else
+                   `which claude`.strip
+                 end
           raise "Claude Code CLI not found in PATH" if path.empty?
+          path
         end
       end
 

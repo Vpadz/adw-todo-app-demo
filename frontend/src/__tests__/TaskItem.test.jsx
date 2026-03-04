@@ -47,11 +47,12 @@ test('calls onToggle when checkbox is clicked', () => {
   expect(mockToggle).toHaveBeenCalledWith(1)
 })
 
-test('calls onDelete when delete button is clicked', () => {
+test('calls onDelete when delete button is clicked and confirmed', () => {
   const mockDelete = vi.fn()
   render(<TaskItem task={mockTask} onToggle={() => {}} onDelete={mockDelete} />)
 
   fireEvent.click(screen.getByRole('button', { name: /eliminar/i }))
+  fireEvent.click(screen.getByRole('button', { name: /confirmar/i }))
   expect(mockDelete).toHaveBeenCalledWith(1)
 })
 
@@ -59,4 +60,30 @@ test('renders drag handle', () => {
   render(<TaskItem task={mockTask} onToggle={() => {}} onDelete={() => {}} />)
   const handle = document.querySelector('.drag-handle')
   expect(handle).toBeInTheDocument()
+})
+
+test('muestra el diálogo de confirmación al hacer clic en Eliminar', () => {
+  render(<TaskItem task={mockTask} onToggle={() => {}} onDelete={() => {}} />)
+
+  fireEvent.click(screen.getByRole('button', { name: /eliminar/i }))
+  expect(screen.getByText('¿Eliminar la tarea "Test task"?')).toBeInTheDocument()
+})
+
+test('no llama a onDelete si se cancela la confirmación', () => {
+  const mockDelete = vi.fn()
+  render(<TaskItem task={mockTask} onToggle={() => {}} onDelete={mockDelete} />)
+
+  fireEvent.click(screen.getByRole('button', { name: /eliminar/i }))
+  fireEvent.click(screen.getByRole('button', { name: /cancelar/i }))
+  expect(mockDelete).not.toHaveBeenCalled()
+})
+
+test('cierra el diálogo al cancelar', () => {
+  render(<TaskItem task={mockTask} onToggle={() => {}} onDelete={() => {}} />)
+
+  fireEvent.click(screen.getByRole('button', { name: /eliminar/i }))
+  expect(screen.getByText('¿Eliminar la tarea "Test task"?')).toBeInTheDocument()
+
+  fireEvent.click(screen.getByRole('button', { name: /cancelar/i }))
+  expect(screen.queryByText('¿Eliminar la tarea "Test task"?')).not.toBeInTheDocument()
 })
